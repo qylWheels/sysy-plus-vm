@@ -1,6 +1,10 @@
+#include <format>
 #include <iostream>
 
-int main(int argc, char **argv) {
-    std::cout << "hello world!" << std::endl;
-    return 0;
+#include "vm.h"
+
+int main(int argc, char *argv[]) {
+  auto path{argv[0]};
+
+  return 0;
 }
