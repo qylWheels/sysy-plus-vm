@@ -1,17 +1,12 @@
 #pragma once
 
-#include <cstddef>
+#include <cstdint>
 #include <variant>
 
 using NumberValue = double;
 
-using PointerValue = std::size_t;
+struct FunctionValue {
+  std::uint16_t index;  // 函数在函数表中的下标
+};
 
-struct ObjectValue {};
-
-struct ArrayValue {};
-
-struct TableValue {};
-
-using Value = std::variant<NumberValue, PointerValue, ObjectValue, ArrayValue,
-                           TableValue>;
+using Value = std::variant<NumberValue, FunctionValue>;
