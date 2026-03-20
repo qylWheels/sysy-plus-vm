@@ -5,14 +5,16 @@
 #include <stack>
 #include <vector>
 
-#include "program.h"
+#include "function.h"
 #include "instruction.h"
+#include "program.h"
 
 struct CallFrame;
 
 class Vm {
  public:
-  void load_program(Program prog);
+  Vm();
+  void load_program(const Program prog);
   void run();
   void gc();
 
@@ -21,13 +23,14 @@ class Vm {
   std::stack<CallFrame> callframes_;  // 栈帧
   std::vector<Value> globals_;        // 全局变量
   std::vector<Value> constants_;      // 常量池
-  std::vector<Value> funcs_;          // 函数
+  std::vector<Function> funcs_;       // 函数
 
  private:
   Instruction decode(const std::uint32_t instr) const;
 };
 
 struct CallFrame {
-  std::stack<Value> valuestack_;  // 值栈
+  Function func;                  // 该栈帧所属的函数
+  std::stack<Value> valuestack;   // 值栈
   std::vector<Value> local_vars;  // 局部变量
 };
