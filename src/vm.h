@@ -1,12 +1,14 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <stack>
 #include <vector>
 
 #include "program.h"
+#include "instruction.h"
 
-class CallFrame;
+struct CallFrame;
 
 class Vm {
  public:
@@ -20,6 +22,9 @@ class Vm {
   std::vector<Value> globals_;        // 全局变量
   std::vector<Value> constants_;      // 常量池
   std::vector<Value> funcs_;          // 函数
+
+ private:
+  Instruction decode(const std::uint32_t instr) const;
 };
 
 struct CallFrame {
