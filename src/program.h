@@ -23,4 +23,6 @@ struct Program {
   std::vector<Value> constants;
   std::uint32_t func_count;
   std::vector<Function> funcs;
+
+  // TODO: 考虑全局变量相关字段
 };
