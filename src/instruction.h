@@ -36,19 +36,19 @@ enum class OpCode : std::uint8_t {
   LogicalOr,
 
   // 无条件跳转
-  JumpInstruction,
+  Jump,
 
   // 条件分支
-  IfLessJumpInstruction,
-  IfLeJumpInstruction,
-  IfEqJumpInstruction,
-  IfGeJumpInstruction,
-  IfGreaterJumpInstruction,
-  IfNotEqJumpInstruction,
+  IfLessJump,
+  IfLeJump,
+  IfEqJump,
+  IfGeJump,
+  IfGreaterJump,
+  IfNotEqJump,
 
   // 函数调用与返回
-  CallInstruction,
-  ReturnInstruction,
+  Call,
+  Return,
 };
 
 using BoolLiteralOperand = bool;
