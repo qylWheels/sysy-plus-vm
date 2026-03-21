@@ -59,6 +59,7 @@ using OffsetOperand = std::int16_t;
 
 // 确定指令选择的是局部变量表还是全局表等等
 enum class TableSelectionOperand : std::uint8_t {
+  ConstantTable,
   GlobalTable,
   LocalVariableTable,
 };
