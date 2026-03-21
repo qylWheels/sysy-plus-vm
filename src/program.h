@@ -10,6 +10,9 @@
 // [4字节] magic number: 0x53 0x59 0x73 0x79 ("SYsy")
 // [2字节] 次版本号
 // [2字节] 主版本号
+// [4字节] 常量池中的常量个数
+// [4字节 * N] 每个常量所占空间（字节数）
+// [sizeof(constant，变长) * N] 常量
 // [4字节] 函数个数
 // [4字节 * N] 每个函数的函数名长度
 // [4字节 * N] 每个函数的指令条数
@@ -20,6 +23,7 @@
 struct Program {
   std::uint16_t minor_version;
   std::uint16_t major_version;
+  std::vector<Value> constants;
   std::vector<Function> funcs;
 
   // TODO: 考虑全局变量相关字段
