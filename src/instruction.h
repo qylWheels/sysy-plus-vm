@@ -65,7 +65,7 @@ enum class TableSelectionOperand : std::uint8_t {
 
 // 栈操作指令
 struct PushInstruction {
-  // 格式：[opcode:8][reserved:6][table kind:2][index:16]
+  // 格式：[opcode:8][reserved:5][table kind:3][index:16]
   TableSelectionOperand table;
   IndexOperand index;
 };
@@ -76,12 +76,12 @@ using StackOperationInstruction = std::variant<PushInstruction, PopInstruction>;
 
 // 存取指令
 struct LoadInstruction {
-  // 格式：[opcode:8][reserved:6][table kind:2][index:16]
+  // 格式：[opcode:8][reserved:5][table kind:3][index:16]
   TableSelectionOperand table;
   IndexOperand index;
 };
 struct StoreInstruction {
-  // 格式：[opcode:8][reserved:6][table kind:2][index:16]
+  // 格式：[opcode:8][reserved:5][table kind:3][index:16]
   TableSelectionOperand table;
   IndexOperand index;
 };
