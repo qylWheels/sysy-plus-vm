@@ -38,5 +38,13 @@
 =======
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
   "file": "src/vm.cpp"
+<<<<<<< HEAD
 >>>>>>> f04e8f6 (修改push指令格式)
+=======
+},
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
+  "file": "src/value.cpp"
+>>>>>>> f6472ee (删除TableSelectionOperand中的常量表标识)
 }]
