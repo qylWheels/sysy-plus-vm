@@ -339,10 +339,9 @@ void Vm::run() {
   }
 }
 
-// TODO: 根据instruction的变化修改decode逻辑
 Instruction Vm::decode(const std::uint32_t instr) const {
   const std::uint16_t low_16_mask = 0xffff;
-  const std::uint8_t low_2_mask = 0x3;
+  const std::uint8_t low_3_mask = 0b111;
 
   const auto opcode = static_cast<OpCode>(instr >> 24);
   switch (opcode) {
@@ -358,13 +357,13 @@ Instruction Vm::decode(const std::uint32_t instr) const {
     // 存取指令
     case OpCode::Load: {
       const auto table_kind =
-          static_cast<TableSelectionOperand>((instr >> 16) & low_2_mask);
+          static_cast<TableSelectionOperand>((instr >> 16) & low_3_mask);
       const auto index = static_cast<IndexOperand>(instr & low_16_mask);
       return LoadInstruction{.table = table_kind, .index = index};
     }
     case OpCode::Store: {
       const auto table_kind =
-          static_cast<TableSelectionOperand>((instr >> 16) & low_2_mask);
+          static_cast<TableSelectionOperand>((instr >> 16) & low_3_mask);
       const auto index = static_cast<IndexOperand>(instr & low_16_mask);
       return StoreInstruction{.table = table_kind, .index = index};
     }
@@ -464,6 +463,20 @@ Instruction Vm::decode(const std::uint32_t instr) const {
           static_cast<BoolLiteralOperand>(instr & 0x1);
       return ReturnInstruction{.has_something_to_return =
                                    has_something_to_return};
+    }
+
+    // 函数参数和返回值相关指令
+    case OpCode::PushParam: {
+      return PushParamInstruction{};
+    }
+    case OpCode::PopParam: {
+      return PopParamInstruction{};
+    }
+    case OpCode::PushRetVal: {
+      return PushRetValInstruction{};
+    }
+    case OpCode::PopRetVal: {
+      return PopRetValInstruction{};
     }
   }
 }
