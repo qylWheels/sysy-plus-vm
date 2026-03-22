@@ -1,7 +1,9 @@
 #include "vm.h"
 
+#include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <ranges>
 #include <stack>
 #include <type_traits>
@@ -10,7 +12,14 @@
 
 #include "instruction.h"
 
-Vm::Vm() : pc_{0}, callframes_{}, globals_{}, constants_{}, funcs_{} {}
+Vm::Vm()
+    : pc_{0},
+      callframes_{},
+      globals_{},
+      constants_{},
+      funcs_{},
+      args_{},
+      retvals_{} {}
 
 void Vm::load_program(const Program prog) {
   this->constants_ = prog.constants;
@@ -46,10 +55,278 @@ void Vm::run() {
                 [this](const auto &instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
                   if constexpr (std::is_same_v<InstrType, PushInstruction>) {
-                    const auto index
+                    const auto table = instr.table;
+                    const auto index = instr.index;
+                    Value v;
+                    switch (table) {
+                      case TableSelectionOperand::ConstantTable: {
+                        v = this->constants_[index];
+                        this->callframes_.top().valuestack.push(v);
+                        break;
+                      }
+                      case TableSelectionOperand::GlobalTable: {
+                        v = this->globals_[index];
+                        this->callframes_.top().valuestack.push(v);
+                        break;
+                      }
+                      case TableSelectionOperand::LocalVariableTable: {
+                        v = this->callframes_.top().local_vars[index];
+                        this->callframes_.top().valuestack.push(v);
+                        break;
+                      }
+                    }
                   } else if constexpr (std::is_same_v<InstrType,
                                                       PopInstruction>) {
                     this->callframes_.top().valuestack.pop();
+                  }
+                },
+                instr);
+          } else if constexpr (std::is_same_v<InstrType,
+                                              LoadAndStoreInstruction>) {
+            std::visit(
+                [this](const auto &instr) {
+                  using InstrType = std::decay_t<decltype(instr)>;
+                  if constexpr (std::is_same_v<InstrType, LoadInstruction>) {
+                    const auto table = instr.table;
+                    const auto index = instr.index;
+                    switch (table) {
+                      case TableSelectionOperand::ConstantTable: {
+                        const Value v = this->constants_[index];
+                        this->callframes_.top().valuestack.push(v);
+                        break;
+                      }
+                      case TableSelectionOperand::GlobalTable: {
+                        const Value v = this->globals_[index];
+                        this->callframes_.top().valuestack.push(v);
+                        break;
+                      }
+                      case TableSelectionOperand::LocalVariableTable: {
+                        const Value v =
+                            this->callframes_.top().local_vars[index];
+                        this->callframes_.top().valuestack.push(v);
+                        break;
+                      }
+                    }
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      StoreInstruction>) {
+                    const auto table = instr.table;
+                    const auto index = instr.index;
+                    switch (table) {
+                      case TableSelectionOperand::ConstantTable: {
+                        const Value v =
+                            this->callframes_.top().valuestack.top();
+                        this->callframes_.top().valuestack.pop();
+                        this->constants_[index] = v;
+                        break;
+                      }
+                      case TableSelectionOperand::GlobalTable: {
+                        const Value v =
+                            this->callframes_.top().valuestack.top();
+                        this->callframes_.top().valuestack.pop();
+                        this->globals_[index] = v;
+                        break;
+                      }
+                      case TableSelectionOperand::LocalVariableTable: {
+                        const Value v =
+                            this->callframes_.top().valuestack.top();
+                        this->callframes_.top().valuestack.pop();
+                        this->callframes_.top().local_vars[index] = v;
+                        break;
+                      }
+                    }
+                  }
+                },
+                instr);
+          } else if constexpr (std::is_same_v<InstrType,
+                                              UnaryOperationInstruction>) {
+            std::visit(
+                [this](const auto &instr) {
+                  using InstrType = std::decay_t<decltype(instr)>;
+                  auto valuestack = this->callframes_.top().valuestack;
+                  auto v = valuestack.top();
+                  valuestack.pop();
+                  if constexpr (std::is_same_v<InstrType, NegInstruction>) {
+                    auto v_inner = std::get<NumberValue>(v);
+                    v = -v_inner;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      LogicalNotInstruction>) {
+                    auto v_inner = std::get<BooleanValue>(v);
+                    v = !v_inner;
+                  }
+                  valuestack.push(v);
+                },
+                instr);
+          } else if constexpr (std::is_same_v<InstrType,
+                                              BinaryOperationInstruction>) {
+            std::visit(
+                [this](const auto &instr) {
+                  using InstrType = std::decay_t<decltype(instr)>;
+                  auto valuestack = this->callframes_.top().valuestack;
+                  const auto epsilon = std::numeric_limits<double>::epsilon();
+                  const auto lhs = valuestack.top();
+                  valuestack.pop();
+                  const auto rhs = valuestack.top();
+                  valuestack.pop();
+                  Value result;
+                  if constexpr (std::is_same_v<InstrType, AddInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = lhs_inner + rhs_inner;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      SubInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = lhs_inner - rhs_inner;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      MulInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = lhs_inner * rhs_inner;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      DivInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = lhs_inner / rhs_inner;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      RemInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = std::fmod(lhs_inner, rhs_inner);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      LessInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = this->compare(lhs_inner, rhs_inner,
+                                           CompareMethod::Less);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      LeInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result =
+                        this->compare(lhs_inner, rhs_inner, CompareMethod::Le);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      EqInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result =
+                        this->compare(lhs_inner, rhs_inner, CompareMethod::Eq);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      GeInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result =
+                        this->compare(lhs_inner, rhs_inner, CompareMethod::Ge);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      GreaterInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = this->compare(lhs_inner, rhs_inner,
+                                           CompareMethod::Greater);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      NotEqInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    result = this->compare(lhs_inner, rhs_inner,
+                                           CompareMethod::NotEq);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      LogicalAndInstruction>) {
+                    const auto lhs_inner = std::get<BooleanValue>(lhs);
+                    const auto rhs_inner = std::get<BooleanValue>(rhs);
+                    result = (lhs_inner && rhs_inner);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      LogicalOrInstruction>) {
+                    const auto lhs_inner = std::get<BooleanValue>(lhs);
+                    const auto rhs_inner = std::get<BooleanValue>(rhs);
+                    result = (lhs_inner || rhs_inner);
+                  }
+                  valuestack.push(result);
+                },
+                instr);
+          } else if constexpr (std::is_same_v<InstrType,
+                                              ControlFlowInstruction>) {
+            std::visit(
+                [this](const auto &instr) {
+                  using InstrType = std::decay_t<decltype(instr)>;
+
+                  // 无条件跳转、call、return指令单独处理
+                  if constexpr (std::is_same_v<InstrType, JumpInstruction>) {
+                    const auto offset = instr.offset;
+                    this->pc_ += 1 + offset;
+                    return;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      CallInstruction>) {
+                    const auto index = instr.index;
+                    const auto func = this->funcs_[index];
+                    const auto new_callframe =
+                        CallFrame{.func{func},
+                                  .valuestack{},
+                                  .local_vars{},
+                                  .parent_pc{this->pc_ + 1}};
+                    this->callframes_.push(new_callframe);
+                    this->pc_ = 0;
+                    return;
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      ReturnInstruction>) {
+                    const auto parent_pc = this->callframes_.top().parent_pc;
+                    this->callframes_.pop();
+                    this->pc_ = parent_pc;
+                    return;
+                  }
+
+                  auto valuestack = this->callframes_.top().valuestack;
+                  const auto lhs = valuestack.top();
+                  valuestack.pop();
+                  const auto rhs = valuestack.top();
+                  valuestack.pop();
+                  if constexpr (std::is_same_v<InstrType,
+                                               IfLessJumpInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    if (this->compare(lhs_inner, rhs_inner,
+                                      CompareMethod::Less)) {
+                      this->pc_ += 1 + instr.offset;
+                    }
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      IfLeJumpInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    if (this->compare(lhs_inner, rhs_inner,
+                                      CompareMethod::Le)) {
+                      this->pc_ += 1 + instr.offset;
+                    }
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      IfEqJumpInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    if (this->compare(lhs_inner, rhs_inner,
+                                      CompareMethod::Eq)) {
+                      this->pc_ += 1 + instr.offset;
+                    }
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      IfGeJumpInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    if (this->compare(lhs_inner, rhs_inner,
+                                      CompareMethod::Ge)) {
+                      this->pc_ += 1 + instr.offset;
+                    }
+                  } else if constexpr (std::is_same_v<
+                                           InstrType,
+                                           IfGreaterJumpInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    if (this->compare(lhs_inner, rhs_inner,
+                                      CompareMethod::Greater)) {
+                      this->pc_ += 1 + instr.offset;
+                    }
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      IfNotEqJumpInstruction>) {
+                    const auto lhs_inner = std::get<NumberValue>(lhs);
+                    const auto rhs_inner = std::get<NumberValue>(rhs);
+                    if (this->compare(lhs_inner, rhs_inner,
+                                      CompareMethod::NotEq)) {
+                      this->pc_ += 1 + instr.offset;
+                    }
                   }
                 },
                 instr);
@@ -62,6 +339,7 @@ void Vm::run() {
   }
 }
 
+// TODO: 根据instruction的变化修改decode逻辑
 Instruction Vm::decode(const std::uint32_t instr) const {
   const std::uint16_t low_16_mask = 0xffff;
   const std::uint8_t low_2_mask = 0x3;
@@ -187,5 +465,23 @@ Instruction Vm::decode(const std::uint32_t instr) const {
       return ReturnInstruction{.has_something_to_return =
                                    has_something_to_return};
     }
+  }
+}
+
+bool Vm::compare(NumberValue a, NumberValue b, CompareMethod m) const {
+  const auto epsilon = std::numeric_limits<NumberValue>::epsilon();
+  switch (m) {
+    case CompareMethod::Less:
+      return ((a - b) < -epsilon);
+    case CompareMethod::Le:
+      return ((a - b) <= -epsilon);
+    case CompareMethod::Eq:
+      return (std::abs(a - b) < epsilon);
+    case CompareMethod::Ge:
+      return ((a - b) >= epsilon);
+    case CompareMethod::Greater:
+      return ((a - b) > epsilon);
+    case CompareMethod::NotEq:
+      return (std::abs(a - b) >= epsilon);
   }
 }
