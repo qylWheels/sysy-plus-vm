@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <variant>
 
+// TODO: 增加在栈顶构造primitive type值的指令
 enum class OpCode : std::uint8_t {
   // 栈操作
   Push,
@@ -49,6 +50,12 @@ enum class OpCode : std::uint8_t {
   // 函数调用与返回
   Call,
   Return,
+
+  // 函数参数和返回值相关
+  PushParam,
+  PopParam,
+  PushRetVal,
+  PopRetVal,
 };
 
 using BoolLiteralOperand = bool;
@@ -197,7 +204,24 @@ using ControlFlowInstruction =
                  IfGreaterJumpInstruction, IfNotEqJumpInstruction,
                  CallInstruction, ReturnInstruction>;
 
+// 函数参数和返回值相关指令
+struct PushParamInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+struct PopParamInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+struct PushRetValInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+struct PopRetValInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+using ArgAndRetValInstruction =
+    std::variant<PushParamInstruction, PopParamInstruction,
+                 PushRetValInstruction, PopRetValInstruction>;
+
 using Instruction =
     std::variant<StackOperationInstruction, LoadAndStoreInstruction,
                  UnaryOperationInstruction, BinaryOperationInstruction,
-                 ControlFlowInstruction>;
+                 ControlFlowInstruction, ArgAndRetValInstruction>;
