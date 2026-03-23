@@ -25,6 +25,4 @@ struct Program {
   std::uint16_t major_version;
   std::vector<Value> constants;
   std::vector<Function> funcs;
-
-  // TODO: 考虑全局变量相关字段
 };
