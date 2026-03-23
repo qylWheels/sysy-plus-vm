@@ -38,7 +38,7 @@ void Vm::run() {
   // 执行指令
   while (true) {
     // 获取当前正在执行的函数
-    const auto &curr_func = this->callframes_.top().func;
+    const auto& curr_func = this->callframes_.top().func;
 
     // 取指
     const auto instr_bytecode = curr_func.instructions[this->pc_];
@@ -48,11 +48,11 @@ void Vm::run() {
 
     // 执行
     std::visit(
-        [this](const auto &instr) {
+        [this](const auto& instr) {
           using InstrType = std::decay_t<decltype(instr)>;
           if constexpr (std::is_same_v<InstrType, StackOperationInstruction>) {
             std::visit(
-                [this](const auto &instr) {
+                [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
                   if constexpr (std::is_same_v<InstrType, PushInstruction>) {
                     const auto table = instr.table;
@@ -84,7 +84,7 @@ void Vm::run() {
           } else if constexpr (std::is_same_v<InstrType,
                                               LoadAndStoreInstruction>) {
             std::visit(
-                [this](const auto &instr) {
+                [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
                   if constexpr (std::is_same_v<InstrType, LoadInstruction>) {
                     const auto table = instr.table;
@@ -140,7 +140,7 @@ void Vm::run() {
           } else if constexpr (std::is_same_v<InstrType,
                                               UnaryOperationInstruction>) {
             std::visit(
-                [this](const auto &instr) {
+                [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
                   auto valuestack = this->callframes_.top().valuestack;
                   auto v = valuestack.top();
@@ -159,7 +159,7 @@ void Vm::run() {
           } else if constexpr (std::is_same_v<InstrType,
                                               BinaryOperationInstruction>) {
             std::visit(
-                [this](const auto &instr) {
+                [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
                   auto valuestack = this->callframes_.top().valuestack;
                   const auto epsilon = std::numeric_limits<double>::epsilon();
@@ -245,7 +245,7 @@ void Vm::run() {
           } else if constexpr (std::is_same_v<InstrType,
                                               ControlFlowInstruction>) {
             std::visit(
-                [this](const auto &instr) {
+                [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
 
                   // 无条件跳转、call、return指令单独处理
@@ -330,6 +330,30 @@ void Vm::run() {
                   }
                 },
                 instr);
+          } else if constexpr (std::is_same_v<InstrType,
+                                              ArgAndRetValInstruction>) {
+            using InstrType = std::decay_t<decltype(instr)>;
+            auto valuestack = this->callframes_.top().valuestack;
+            if constexpr (std::is_same_v<InstrType, PushParamInstruction>) {
+              const auto param = valuestack.top();
+              valuestack.pop();
+              this->args_.push(param);
+            } else if constexpr (std::is_same_v<InstrType,
+                                                PopParamInstruction>) {
+              const auto param = this->args_.front();
+              this->args_.pop();
+              this->callframes_.top().valuestack.push(param);
+            } else if constexpr (std::is_same_v<InstrType,
+                                                PushRetValInstruction>) {
+              const auto retval = valuestack.top();
+              valuestack.pop();
+              this->retvals_.push(retval);
+            } else if constexpr (std::is_same_v<InstrType,
+                                                PopRetValInstruction>) {
+              const auto retval = this->retvals_.front();
+              this->retvals_.pop();
+              this->callframes_.top().valuestack.push(retval);
+            }
           }
         },
         instr);
