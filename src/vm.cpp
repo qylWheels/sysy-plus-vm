@@ -27,7 +27,6 @@ void Vm::load_program(const Program prog) {
   this->funcs_ = prog.funcs;
 }
 
-// TODO: 处理表达式出栈入栈顺序问题
 // TODO: 处理嵌套函数传参与返回值问题
 void Vm::run() {
   // 找到main函数
@@ -173,9 +172,12 @@ void Vm::run() {
                   using InstrType = std::decay_t<decltype(instr)>;
                   auto& valuestack = this->callframes_.top().valuestack;
                   const auto epsilon = std::numeric_limits<double>::epsilon();
-                  const auto lhs = valuestack.top();
-                  valuestack.pop();
+
+                  // 注意rhs后被入栈，所以第一个出栈的应该是rhs
+                  // dirty work应该交给vm内部来做，而非交给生成字节码的用户
                   const auto rhs = valuestack.top();
+                  valuestack.pop();
+                  const auto lhs = valuestack.top();
                   valuestack.pop();
                   Value result;
                   if constexpr (std::is_same_v<InstrType, AddInstruction>) {
@@ -284,9 +286,9 @@ void Vm::run() {
                   }
 
                   auto& valuestack = this->callframes_.top().valuestack;
-                  const auto lhs = valuestack.top();
-                  valuestack.pop();
                   const auto rhs = valuestack.top();
+                  valuestack.pop();
+                  const auto lhs = valuestack.top();
                   valuestack.pop();
                   if constexpr (std::is_same_v<InstrType,
                                                IfLessJumpInstruction>) {
