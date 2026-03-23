@@ -27,7 +27,6 @@ void Vm::load_program(const Program prog) {
   this->funcs_ = prog.funcs;
 }
 
-// TODO: 处理嵌套函数传参与返回值问题
 void Vm::run() {
   // 找到main函数
   const auto main_func = std::ranges::find_if(
