@@ -27,6 +27,8 @@ void Vm::load_program(const Program prog) {
   this->funcs_ = prog.funcs;
 }
 
+// TODO: 处理表达式出栈入栈顺序问题
+// TODO: 处理嵌套函数传参与返回值问题
 void Vm::run() {
   // 找到main函数
   const auto main_func = std::ranges::find_if(
@@ -150,7 +152,7 @@ void Vm::run() {
             std::visit(
                 [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
-                  auto valuestack = this->callframes_.top().valuestack;
+                  auto& valuestack = this->callframes_.top().valuestack;
                   auto v = valuestack.top();
                   valuestack.pop();
                   if constexpr (std::is_same_v<InstrType, NegInstruction>) {
@@ -169,7 +171,7 @@ void Vm::run() {
             std::visit(
                 [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
-                  auto valuestack = this->callframes_.top().valuestack;
+                  auto& valuestack = this->callframes_.top().valuestack;
                   const auto epsilon = std::numeric_limits<double>::epsilon();
                   const auto lhs = valuestack.top();
                   valuestack.pop();
@@ -281,7 +283,7 @@ void Vm::run() {
                     return;
                   }
 
-                  auto valuestack = this->callframes_.top().valuestack;
+                  auto& valuestack = this->callframes_.top().valuestack;
                   const auto lhs = valuestack.top();
                   valuestack.pop();
                   const auto rhs = valuestack.top();
@@ -341,7 +343,7 @@ void Vm::run() {
           } else if constexpr (std::is_same_v<InstrType,
                                               ArgAndRetValInstruction>) {
             using InstrType = std::decay_t<decltype(instr)>;
-            auto valuestack = this->callframes_.top().valuestack;
+            auto& valuestack = this->callframes_.top().valuestack;
             if constexpr (std::is_same_v<InstrType, PushParamInstruction>) {
               const auto param = valuestack.top();
               valuestack.pop();
