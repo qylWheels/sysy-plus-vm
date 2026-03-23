@@ -37,7 +37,14 @@ void Vm::run() {
       CallFrame{.func = *main_func, .valuestack{}, .local_vars{}});
 
   // 执行指令
+  const auto main_func_len = main_func->instructions.size();
   while (true) {
+    // 如果pc指向main的最后一条指令的后一条指令，则退出循环
+    if (this->callframes_.top().func.name == "main" &&
+        this->pc_ >= main_func_len) {
+      break;
+    }
+
     // 获取当前正在执行的函数
     const auto& curr_func = this->callframes_.top().func;
 
