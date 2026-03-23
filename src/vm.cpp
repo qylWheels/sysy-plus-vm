@@ -7,6 +7,7 @@
 #include <ranges>
 #include <stack>
 #include <type_traits>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -502,6 +503,9 @@ Instruction Vm::decode(const std::uint32_t instr) const {
     case OpCode::PopRetVal: {
       return PopRetValInstruction{};
     }
+
+    default:
+      std::unreachable();
   }
 }
 
@@ -520,5 +524,8 @@ bool Vm::compare(NumberValue a, NumberValue b, CompareMethod m) const {
       return ((a - b) > epsilon);
     case CompareMethod::NotEq:
       return (std::abs(a - b) >= epsilon);
+
+    default:
+      std::unreachable();
   }
 }
