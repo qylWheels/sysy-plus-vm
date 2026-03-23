@@ -372,8 +372,10 @@ Instruction Vm::decode(const std::uint32_t instr) const {
   switch (opcode) {
     // 栈操作指令
     case OpCode::Push: {
+      const auto table_kind =
+          static_cast<TableSelectionOperand>((instr >> 16) & low_3_mask);
       const auto index = static_cast<IndexOperand>(instr & low_16_mask);
-      return PushInstruction{.index = index};
+      return PushInstruction{.table = table_kind, .index = index};
     }
     case OpCode::Pop: {
       return PopInstruction{};
