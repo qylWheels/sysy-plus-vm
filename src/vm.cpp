@@ -51,6 +51,9 @@ void Vm::run() {
     // 取指
     const auto instr_bytecode = curr_func.instructions[this->pc_];
 
+    // pc自增
+    this->pc_ += 1;
+
     // 译码
     const auto instr = this->decode(instr_bytecode);
 
@@ -262,7 +265,7 @@ void Vm::run() {
                   // 无条件跳转、call、return指令单独处理
                   if constexpr (std::is_same_v<InstrType, JumpInstruction>) {
                     const auto offset = instr.offset;
-                    this->pc_ += 1 + offset;
+                    this->pc_ += offset;
                     return;
                   } else if constexpr (std::is_same_v<InstrType,
                                                       CallInstruction>) {
@@ -295,7 +298,7 @@ void Vm::run() {
                     const auto rhs_inner = std::get<NumberValue>(rhs);
                     if (this->compare(lhs_inner, rhs_inner,
                                       CompareMethod::Less)) {
-                      this->pc_ += 1 + instr.offset;
+                      this->pc_ += instr.offset;
                     }
                   } else if constexpr (std::is_same_v<InstrType,
                                                       IfLeJumpInstruction>) {
@@ -303,7 +306,7 @@ void Vm::run() {
                     const auto rhs_inner = std::get<NumberValue>(rhs);
                     if (this->compare(lhs_inner, rhs_inner,
                                       CompareMethod::Le)) {
-                      this->pc_ += 1 + instr.offset;
+                      this->pc_ += instr.offset;
                     }
                   } else if constexpr (std::is_same_v<InstrType,
                                                       IfEqJumpInstruction>) {
@@ -311,7 +314,7 @@ void Vm::run() {
                     const auto rhs_inner = std::get<NumberValue>(rhs);
                     if (this->compare(lhs_inner, rhs_inner,
                                       CompareMethod::Eq)) {
-                      this->pc_ += 1 + instr.offset;
+                      this->pc_ += instr.offset;
                     }
                   } else if constexpr (std::is_same_v<InstrType,
                                                       IfGeJumpInstruction>) {
@@ -319,7 +322,7 @@ void Vm::run() {
                     const auto rhs_inner = std::get<NumberValue>(rhs);
                     if (this->compare(lhs_inner, rhs_inner,
                                       CompareMethod::Ge)) {
-                      this->pc_ += 1 + instr.offset;
+                      this->pc_ += instr.offset;
                     }
                   } else if constexpr (std::is_same_v<
                                            InstrType,
@@ -328,7 +331,7 @@ void Vm::run() {
                     const auto rhs_inner = std::get<NumberValue>(rhs);
                     if (this->compare(lhs_inner, rhs_inner,
                                       CompareMethod::Greater)) {
-                      this->pc_ += 1 + instr.offset;
+                      this->pc_ += instr.offset;
                     }
                   } else if constexpr (std::is_same_v<InstrType,
                                                       IfNotEqJumpInstruction>) {
@@ -336,7 +339,7 @@ void Vm::run() {
                     const auto rhs_inner = std::get<NumberValue>(rhs);
                     if (this->compare(lhs_inner, rhs_inner,
                                       CompareMethod::NotEq)) {
-                      this->pc_ += 1 + instr.offset;
+                      this->pc_ += instr.offset;
                     }
                   }
                 },
@@ -347,7 +350,7 @@ void Vm::run() {
                 [this](const auto& instr) {
                   using InstrType = std::decay_t<decltype(instr)>;
                   auto& valuestack = this->callframes_.top().valuestack;
-                  
+
                   if constexpr (std::is_same_v<InstrType,
                                                PushParamInstruction>) {
                     const auto param = valuestack.top();
@@ -374,9 +377,6 @@ void Vm::run() {
           }
         },
         instr);
-
-    // pc自增
-    this->pc_ += 1;
   }
 }
 
