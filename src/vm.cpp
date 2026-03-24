@@ -343,28 +343,34 @@ void Vm::run() {
                 instr);
           } else if constexpr (std::is_same_v<InstrType,
                                               ArgAndRetValInstruction>) {
-            using InstrType = std::decay_t<decltype(instr)>;
-            auto& valuestack = this->callframes_.top().valuestack;
-            if constexpr (std::is_same_v<InstrType, PushParamInstruction>) {
-              const auto param = valuestack.top();
-              valuestack.pop();
-              this->args_.push(param);
-            } else if constexpr (std::is_same_v<InstrType,
-                                                PopParamInstruction>) {
-              const auto param = this->args_.front();
-              this->args_.pop();
-              this->callframes_.top().valuestack.push(param);
-            } else if constexpr (std::is_same_v<InstrType,
-                                                PushRetValInstruction>) {
-              const auto retval = valuestack.top();
-              valuestack.pop();
-              this->retvals_.push(retval);
-            } else if constexpr (std::is_same_v<InstrType,
-                                                PopRetValInstruction>) {
-              const auto retval = this->retvals_.front();
-              this->retvals_.pop();
-              this->callframes_.top().valuestack.push(retval);
-            }
+            std::visit(
+                [this](const auto& instr) {
+                  using InstrType = std::decay_t<decltype(instr)>;
+                  auto& valuestack = this->callframes_.top().valuestack;
+                  
+                  if constexpr (std::is_same_v<InstrType,
+                                               PushParamInstruction>) {
+                    const auto param = valuestack.top();
+                    valuestack.pop();
+                    this->args_.push(param);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      PopParamInstruction>) {
+                    const auto param = this->args_.front();
+                    this->args_.pop();
+                    this->callframes_.top().valuestack.push(param);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      PushRetValInstruction>) {
+                    const auto retval = valuestack.top();
+                    valuestack.pop();
+                    this->retvals_.push(retval);
+                  } else if constexpr (std::is_same_v<InstrType,
+                                                      PopRetValInstruction>) {
+                    const auto retval = this->retvals_.front();
+                    this->retvals_.pop();
+                    this->callframes_.top().valuestack.push(retval);
+                  }
+                },
+                instr);
           }
         },
         instr);
