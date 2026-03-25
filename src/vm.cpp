@@ -271,20 +271,34 @@ void Vm::run() {
                     return;
                   } else if constexpr (std::is_same_v<InstrType,
                                                       CallInstruction>) {
+                    auto& valuestack = this->callframes_.top().valuestack;
                     const auto index = instr.index;
                     const auto func = this->funcs_[index];
-                    const auto new_callframe =
-                        CallFrame{.func{func},
-                                  .valuestack{},
-                                  .local_vars{},
-                                  .parent_pc{this->pc_}};
+                    const auto arg_count = func.param_count;
+                    auto args = std::vector<Value>(arg_count);
+                    for (int i = 0; i < arg_count; ++i) {
+                      args[arg_count - i - 1] = valuestack.top();
+                      valuestack.pop();
+                    }
+                    const auto new_callframe = CallFrame{.func{func},
+                                                         .valuestack{},
+                                                         .local_vars{args},
+                                                         .parent_pc{this->pc_}};
                     this->callframes_.push(new_callframe);
                     this->pc_ = 0;
                     return;
                   } else if constexpr (std::is_same_v<InstrType,
                                                       ReturnInstruction>) {
+                    // 在callee的栈帧中做准备返回的工作
+                    auto& valuestack = this->callframes_.top().valuestack;
+                    const auto retval = valuestack.top();
+                    valuestack.pop();
                     const auto parent_pc = this->callframes_.top().parent_pc;
+
+                    // 弹出callee的栈帧，回到caller的栈帧
                     this->callframes_.pop();
+                    valuestack = this->callframes_.top().valuestack;
+                    valuestack.push(retval);
                     this->pc_ = parent_pc;
                     return;
                   }
