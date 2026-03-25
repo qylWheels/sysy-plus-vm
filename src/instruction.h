@@ -52,10 +52,10 @@ enum class OpCode : std::uint8_t {
   Return,
 
   // 函数参数和返回值相关
-  PushParam,
-  PopParam,
-  PushRetVal,
-  PopRetVal,
+  PushParam [[deprecated]],
+  PopParam [[deprecated]],
+  PushRetVal [[deprecated]],
+  PopRetVal [[deprecated]],
 };
 
 using BoolLiteralOperand = bool;
@@ -205,19 +205,19 @@ using ControlFlowInstruction =
                  CallInstruction, ReturnInstruction>;
 
 // 函数参数和返回值相关指令
-struct PushParamInstruction {
+struct [[deprecated]] PushParamInstruction {
   // 格式: [opcode:8][reserved:24]
 };
-struct PopParamInstruction {
+struct [[deprecated]] PopParamInstruction {
   // 格式: [opcode:8][reserved:24]
 };
-struct PushRetValInstruction {
+struct [[deprecated]] PushRetValInstruction {
   // 格式: [opcode:8][reserved:24]
 };
-struct PopRetValInstruction {
+struct [[deprecated]] PopRetValInstruction {
   // 格式: [opcode:8][reserved:24]
 };
-using ArgAndRetValInstruction =
+using ArgAndRetValInstruction [[deprecated]] =
     std::variant<PushParamInstruction, PopParamInstruction,
                  PushRetValInstruction, PopRetValInstruction>;
 
