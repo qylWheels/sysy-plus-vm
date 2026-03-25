@@ -27,8 +27,6 @@ void Vm::load_program(const Program prog) {
   this->funcs_ = prog.funcs;
 }
 
-// TODO: 修复传参和返回值顺序相关问题。考虑deprecate掉popparam和popretval指令以
-// 向上层隐藏相应实现
 void Vm::run() {
   // 找到main函数
   const auto main_func = std::ranges::find_if(
