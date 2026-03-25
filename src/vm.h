@@ -20,13 +20,14 @@ class Vm {
   void gc();
 
  private:
-  std::size_t pc_;                    // 程序计数器
-  std::stack<CallFrame> callframes_;  // 栈帧
-  std::vector<Value> globals_;        // 全局变量
-  std::vector<Value> constants_;      // 常量池
-  std::vector<Function> funcs_;       // 函数
-  std::queue<Value> args_;     // 函数调用时caller传递给callee的参数
-  std::queue<Value> retvals_;  // 函数返回时callee返回给caller的返回值
+  std::size_t pc_;                         // 程序计数器
+  std::stack<CallFrame> callframes_;       // 栈帧
+  std::vector<Value> globals_;             // 全局变量
+  std::vector<Value> constants_;           // 常量池
+  std::vector<Function> funcs_;            // 函数
+  [[deprecated]] std::queue<Value> args_;  // 函数调用时caller传递给callee的参数
+  [[deprecated]] std::queue<Value>
+      retvals_;  // 函数返回时callee返回给caller的返回值
 
   // 数字型类型的值的比较方法分类
   enum class CompareMethod { Less, Le, Eq, Ge, Greater, NotEq };
