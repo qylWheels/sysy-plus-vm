@@ -27,6 +27,11 @@ void Vm::load_program(const Program prog) {
   this->funcs_ = prog.funcs;
 }
 
+// TODO:
+// 处理向各种表的对应下标位置写入时，该位置不存在（也即表没有扩容到这里）的问题。
+// 可以考虑编译期就确定各种表的大小/或者动态扩容
+
+// TODO: 向常量表写入应为unreachable
 void Vm::run() {
   // 找到main函数
   const auto main_func = std::ranges::find_if(
