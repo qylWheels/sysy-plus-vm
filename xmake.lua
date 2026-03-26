@@ -1,12 +1,19 @@
 add_rules("mode.debug", "mode.release")
 set_languages("c++23")
 
-add_requires("cpptrace")
+add_requires("gtest")
 
 target("sysy-plus-vm-cpp")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("cpptrace")
+    for _, testfile in ipairs(os.files("tests/*.cpp")) do
+        add_tests(path.basename(testfile), {
+            files = testfile,
+            remove_files = "src/main.cpp",
+            packages = "gtest",  -- 集成 gtest 包
+            defines = "TEST_MAIN"
+        })
+    end
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
