@@ -6,6 +6,7 @@ add_requires("gtest")
 target("sysy-plus-vm-cpp")
     set_kind("binary")
     add_files("src/*.cpp")
+    add_packages("gtest")
     for _, testfile in ipairs(os.files("tests/*.cpp")) do
         add_tests(path.basename(testfile), {
             files = testfile,
