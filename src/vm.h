@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gtest/gtest.h>
+
 #include <cstddef>
 #include <cstdint>
 #include <queue>
@@ -13,6 +15,9 @@
 struct CallFrame;
 
 class Vm {
+  // 用于测试的友元类
+  FRIEND_TEST(SingleInstructionTest, PushInstruction);
+
  public:
   Vm();
   void load_program(const Program prog);
