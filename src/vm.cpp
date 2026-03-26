@@ -30,8 +30,6 @@ void Vm::load_program(const Program prog) {
 // TODO:
 // 处理向各种表的对应下标位置写入时，该位置不存在（也即表没有扩容到这里）的问题。
 // 可以考虑编译期就确定各种表的大小/或者动态扩容
-
-// TODO: 向常量表写入应为unreachable
 void Vm::run() {
   // 找到main函数
   const auto main_func = std::ranges::find_if(
@@ -129,10 +127,7 @@ void Vm::run() {
                     const auto index = instr.index;
                     switch (table) {
                       case TableSelectionOperand::ConstantTable: {
-                        const Value v =
-                            this->callframes_.top().valuestack.top();
-                        this->callframes_.top().valuestack.pop();
-                        this->constants_[index] = v;
+                        std::terminate();  // 不能向常量表里写内容
                         break;
                       }
                       case TableSelectionOperand::GlobalTable: {
@@ -542,7 +537,7 @@ Instruction Vm::decode(const std::uint32_t instr) const {
     }
 
     default:
-      std::unreachable();
+      std::terminate();  // 不可达
   }
 }
 
@@ -563,6 +558,6 @@ bool Vm::compare(NumberValue a, NumberValue b, CompareMethod m) const {
       return (std::abs(a - b) >= epsilon);
 
     default:
-      std::unreachable();
+      std::terminate();  // 不可达
   }
 }
