@@ -15,9 +15,6 @@
 struct CallFrame;
 
 class Vm {
-  // 用于测试的友元类
-  FRIEND_TEST(SingleInstructionTest, PushInstruction);
-
  public:
   Vm();
   void load_program(const Program prog);
@@ -40,6 +37,10 @@ class Vm {
  private:
   Instruction decode(const std::uint32_t instr) const;
   bool compare(NumberValue a, NumberValue b, CompareMethod m) const;
+
+  // 用于测试的友元类
+  FRIEND_TEST(SingleInstructionTest, PushInstruction);
+  FRIEND_TEST(SingleInstructionTest, PopInstruction);
 };
 
 struct CallFrame {
