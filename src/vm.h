@@ -41,6 +41,7 @@ class Vm {
   // 用于测试的友元类
   FRIEND_TEST(SingleInstructionTest, PushInstruction);
   FRIEND_TEST(SingleInstructionTest, PopInstruction);
+  FRIEND_TEST(SingleInstructionTest, LoadInstruction);
 };
 
 struct CallFrame {

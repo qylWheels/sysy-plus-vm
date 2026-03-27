@@ -57,6 +57,15 @@ TEST_F(SingleInstructionTest, PopInstruction) {
   EXPECT_EQ(valuestack.size(), 0);
 }
 
+TEST_F(SingleInstructionTest, LoadInstruction) {
+  const auto func = generate_function("main", 0, {0x02000000});
+  const auto prog = generate_program({func}, {1.0});
+  load_and_run(prog);
+
+  const auto& valuestack = this->vm.callframes_.top().valuestack;
+  EXPECT_EQ(std::get<NumberValue>(valuestack.top()), 1.0);
+}
+
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
