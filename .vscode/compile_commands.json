@@ -1,0 +1,6 @@
+[
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+}]
