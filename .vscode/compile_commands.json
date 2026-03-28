@@ -1,21 +1,41 @@
 [
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
-  "file": "src/main.cpp"
-},
-{
-  "directory": "/home/comma/sysy-plus-vm-cpp",
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp_test_single_instruction/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
   "file": "src/parse.cpp"
 },
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp_test_single_instruction/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
   "file": "src/vm.cpp"
 },
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp_test_single_instruction/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
+  "file": "src/value.cpp"
+},
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-DTEST_MAIN", "-o", "build/.objs/sysy-plus-vm-cpp_test_single_instruction/linux/x86_64/debug/tests/test_single_instruction.cpp.o", "tests/test_single_instruction.cpp"],
+  "file": "tests/test_single_instruction.cpp"
+},
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+},
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
+  "file": "src/parse.cpp"
+},
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
+  "file": "src/vm.cpp"
+},
+{
+  "directory": "/home/comma/sysy-plus-vm-cpp",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-isystem", "/home/comma/.xmake/packages/g/gtest/v1.17.0/fe669f042f444a6cb3a06c810a609640/include", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
   "file": "src/value.cpp"
 }]

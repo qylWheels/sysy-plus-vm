@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gtest/gtest.h>
+
 #include <cstddef>
 #include <cstdint>
 #include <queue>
@@ -35,6 +37,11 @@ class Vm {
  private:
   Instruction decode(const std::uint32_t instr) const;
   bool compare(NumberValue a, NumberValue b, CompareMethod m) const;
+
+  // 用于测试的友元类
+  FRIEND_TEST(SingleInstructionTest, PushInstruction);
+  FRIEND_TEST(SingleInstructionTest, PopInstruction);
+  FRIEND_TEST(SingleInstructionTest, LoadInstruction);
 };
 
 struct CallFrame {
