@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <variant>
 
+// TODO: 增加在栈顶构造primitive type值的指令
 enum class OpCode : std::uint8_t {
   // 栈操作
   Push,
@@ -36,19 +37,25 @@ enum class OpCode : std::uint8_t {
   LogicalOr,
 
   // 无条件跳转
-  JumpInstruction,
+  Jump,
 
   // 条件分支
-  IfLessJumpInstruction,
-  IfLeJumpInstruction,
-  IfEqJumpInstruction,
-  IfGeJumpInstruction,
-  IfGreaterJumpInstruction,
-  IfNotEqJumpInstruction,
+  IfLessJump,
+  IfLeJump,
+  IfEqJump,
+  IfGeJump,
+  IfGreaterJump,
+  IfNotEqJump,
 
   // 函数调用与返回
-  CallInstruction,
-  ReturnInstruction,
+  Call,
+  Return,
+
+  // 函数参数和返回值相关
+  PushParam [[deprecated]],
+  PopParam [[deprecated]],
+  PushRetVal [[deprecated]],
+  PopRetVal [[deprecated]],
 };
 
 using BoolLiteralOperand = bool;
@@ -66,7 +73,8 @@ enum class TableSelectionOperand : std::uint8_t {
 
 // 栈操作指令
 struct PushInstruction {
-  // 格式：[opcode:8][reserved:8][index operand:16]
+  // 格式：[opcode:8][reserved:5][table kind:3][index:16]
+  TableSelectionOperand table;
   IndexOperand index;
 };
 struct PopInstruction {
@@ -76,12 +84,12 @@ using StackOperationInstruction = std::variant<PushInstruction, PopInstruction>;
 
 // 存取指令
 struct LoadInstruction {
-  // 格式：[opcode:8][reserved:6][table kind:2][index:16]
+  // 格式：[opcode:8][reserved:5][table kind:3][index:16]
   TableSelectionOperand table;
   IndexOperand index;
 };
 struct StoreInstruction {
-  // 格式：[opcode:8][reserved:6][table kind:2][index:16]
+  // 格式：[opcode:8][reserved:5][table kind:3][index:16]
   TableSelectionOperand table;
   IndexOperand index;
 };
@@ -196,7 +204,24 @@ using ControlFlowInstruction =
                  IfGreaterJumpInstruction, IfNotEqJumpInstruction,
                  CallInstruction, ReturnInstruction>;
 
+// 函数参数和返回值相关指令
+struct [[deprecated]] PushParamInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+struct [[deprecated]] PopParamInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+struct [[deprecated]] PushRetValInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+struct [[deprecated]] PopRetValInstruction {
+  // 格式: [opcode:8][reserved:24]
+};
+using ArgAndRetValInstruction [[deprecated]] =
+    std::variant<PushParamInstruction, PopParamInstruction,
+                 PushRetValInstruction, PopRetValInstruction>;
+
 using Instruction =
     std::variant<StackOperationInstruction, LoadAndStoreInstruction,
                  UnaryOperationInstruction, BinaryOperationInstruction,
-                 ControlFlowInstruction>;
+                 ControlFlowInstruction, ArgAndRetValInstruction>;
