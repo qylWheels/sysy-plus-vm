@@ -1,9 +1,12 @@
 add_rules("mode.debug", "mode.release")
-set_languages("c++20")
+set_languages("c++23")
+
+add_requires("cpptrace")
 
 target("sysy-plus-vm-cpp")
     set_kind("binary")
     add_files("src/*.cpp")
+    add_packages("cpptrace")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

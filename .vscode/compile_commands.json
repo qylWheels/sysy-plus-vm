@@ -1,87 +1,21 @@
 [
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
   "file": "src/main.cpp"
 },
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
-=======
-=======
->>>>>>> feature/value
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++20", "-DNDEBUG", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/release/src/parse.cpp.o", "src/parse.cpp"],
->>>>>>> 92d793a (实现各种指令的定义)
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
-<<<<<<< HEAD
->>>>>>> 0c90bef (修改字节码文件结构和Program结构体字段)
->>>>>>> feature/program
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
->>>>>>> feature/skeleton
-=======
->>>>>>> 8500986 (新增boolean value类型)
->>>>>>> feature/value
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
   "file": "src/parse.cpp"
 },
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++20", "-DNDEBUG", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/release/src/vm.cpp.o", "src/vm.cpp"],
->>>>>>> 92d793a (实现各种指令的定义)
->>>>>>> feature/program
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
->>>>>>> feature/skeleton
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++20", "-DNDEBUG", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/release/src/vm.cpp.o", "src/vm.cpp"],
->>>>>>> 92d793a (实现各种指令的定义)
->>>>>>> feature/value
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
   "file": "src/vm.cpp"
 },
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++23", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
   "file": "src/value.cpp"
-=======
-<<<<<<< HEAD
-=======
->>>>>>> feature/value
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++20", "-DNDEBUG", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/release/src/value.cpp.o", "src/value.cpp"],
->>>>>>> 92d793a (实现各种指令的定义)
-  "file": "src/value.cpp"
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
-  "file": "src/vm.cpp"
-<<<<<<< HEAD
->>>>>>> 0c90bef (修改字节码文件结构和Program结构体字段)
->>>>>>> feature/program
-=======
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/value.cpp.o", "src/value.cpp"],
-  "file": "src/value.cpp"
->>>>>>> feature/skeleton
-=======
->>>>>>> 8500986 (新增boolean value类型)
->>>>>>> feature/value
 }]
