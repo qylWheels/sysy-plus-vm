@@ -7,14 +7,19 @@
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
 <<<<<<< HEAD
+<<<<<<< HEAD
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
 =======
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++20", "-DNDEBUG", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/release/src/parse.cpp.o", "src/parse.cpp"],
 >>>>>>> 92d793a (实现各种指令的定义)
+=======
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/parse.cpp.o", "src/parse.cpp"],
+>>>>>>> 6d672ae (更改Function结构体的定义)
   "file": "src/parse.cpp"
 },
 {
   "directory": "/home/comma/sysy-plus-vm-cpp",
+<<<<<<< HEAD
 <<<<<<< HEAD
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
 =======
@@ -30,4 +35,8 @@
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++20", "-DNDEBUG", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/release/src/value.cpp.o", "src/value.cpp"],
 >>>>>>> 92d793a (实现各种指令的定义)
   "file": "src/value.cpp"
+=======
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-O0", "-std=c++20", "-o", "build/.objs/sysy-plus-vm-cpp/linux/x86_64/debug/src/vm.cpp.o", "src/vm.cpp"],
+  "file": "src/vm.cpp"
+>>>>>>> 6d672ae (更改Function结构体的定义)
 }]
