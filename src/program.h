@@ -11,18 +11,15 @@
 // [2字节] 次版本号
 // [2字节] 主版本号
 // [4字节] 常量池中的常量个数
-// [4字节 * N] 每个常量所占空间（字节数）
 // [sizeof(constant，变长) * N] 常量
+// [4字节] 全局变量表长度
 // [4字节] 函数个数
-// [4字节 * N] 每个函数的函数名长度
-// [4字节 * N] 每个函数的指令条数
 // [sizeof(function，变长) * N] 函数
-// - [变长] 函数名
-// - [变长] 函数指令
 
 struct Program {
   std::uint16_t minor_version;
   std::uint16_t major_version;
   std::vector<Value> constants;
+  std::uint32_t global_table_size;
   std::vector<Function> funcs;
 };
