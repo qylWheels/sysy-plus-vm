@@ -23,6 +23,7 @@ Vm::Vm()
       retvals_{} {}
 
 void Vm::load_program(const Program prog) {
+  this->globals_ = std::vector<Value>(prog.global_table_size);
   this->constants_ = prog.constants;
   this->funcs_ = prog.funcs;
 }
@@ -37,7 +38,10 @@ void Vm::run() {
 
   // 创建栈帧
   this->callframes_.push(
-      CallFrame{.func = *main_func, .valuestack{}, .local_vars{}});
+      CallFrame{.func = *main_func,
+                .valuestack{},
+                .local_vars{std::vector<Value>(main_func->param_count +
+                                               main_func->local_var_count)}});
 
   // 执行指令
   const auto main_func_len = main_func->instructions.size();
@@ -278,10 +282,16 @@ void Vm::run() {
                       args[arg_count - i - 1] = valuestack.top();
                       valuestack.pop();
                     }
-                    const auto new_callframe = CallFrame{.func{func},
-                                                         .valuestack{},
-                                                         .local_vars{args},
-                                                         .parent_pc{this->pc_}};
+                    auto local_vars = std::vector<Value>{};
+                    local_vars.reserve(args.size() + func.local_var_count);
+                    for (auto& arg : args) {
+                      local_vars.push_back(arg);
+                    }
+                    const auto new_callframe =
+                        CallFrame{.func{func},
+                                  .valuestack{},
+                                  .local_vars{local_vars},
+                                  .parent_pc{this->pc_}};
                     this->callframes_.push(new_callframe);
                     this->pc_ = 0;
                     return;
