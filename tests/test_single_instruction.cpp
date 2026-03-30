@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <cmath>
 #include <string>
 #include <variant>
 #include <vector>
@@ -20,6 +21,7 @@ class SingleInstructionTest : public testing::Test {
     vm.run();
   }
 
+  // TODO: 取消对generate_program和generate_function的调用
   Program generate_program(const std::vector<Function> funcs,
                            std::vector<Value> constants) {
     const auto prog = Program{
@@ -64,6 +66,168 @@ TEST_F(SingleInstructionTest, LoadInstruction) {
 
   const auto& valuestack = this->vm.callframes_.top().valuestack;
   EXPECT_EQ(std::get<NumberValue>(valuestack.top()), 1.0);
+}
+
+TEST_F(SingleInstructionTest, StoreInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x03010000, 0x02000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.0},
+      .global_table_size{1},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(std::get<NumberValue>(this->vm.globals_[0]), 1.0);
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]), 1.0);
+}
+
+TEST_F(SingleInstructionTest, NegInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{1},
+                             .instructions{0x02000000, 0x04000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.0},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]), -1.0);
+}
+
+TEST_F(SingleInstructionTest, LogicalNotInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{1},
+                             .instructions{0x02000000, 0x05000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{false},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            true);
+}
+
+TEST_F(SingleInstructionTest, AddInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x06000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{2.3, 1.1},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]), 3.4);
+}
+
+TEST_F(SingleInstructionTest, SubInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x07000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{2.3, 1.1},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]), 1.2);
+}
+
+TEST_F(SingleInstructionTest, MulInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x08000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{2.3, 1.1},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]),
+      2.3 * 1.1);
+}
+
+TEST_F(SingleInstructionTest, DivInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x09000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{2.3, 1.1},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]),
+      2.3 / 1.1);
+}
+
+TEST_F(SingleInstructionTest, RemInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x0a000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{2.3, 1.1},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().local_vars[0]),
+      std::fmod(2.3, 1.1));
 }
 
 int main(int argc, char** argv) {

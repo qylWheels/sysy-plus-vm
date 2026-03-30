@@ -42,6 +42,14 @@ class Vm {
   FRIEND_TEST(SingleInstructionTest, PushInstruction);
   FRIEND_TEST(SingleInstructionTest, PopInstruction);
   FRIEND_TEST(SingleInstructionTest, LoadInstruction);
+  FRIEND_TEST(SingleInstructionTest, StoreInstruction);
+  FRIEND_TEST(SingleInstructionTest, NegInstruction);
+  FRIEND_TEST(SingleInstructionTest, LogicalNotInstruction);
+  FRIEND_TEST(SingleInstructionTest, AddInstruction);
+  FRIEND_TEST(SingleInstructionTest, SubInstruction);
+  FRIEND_TEST(SingleInstructionTest, MulInstruction);
+  FRIEND_TEST(SingleInstructionTest, DivInstruction);
+  FRIEND_TEST(SingleInstructionTest, RemInstruction);
 };
 
 struct CallFrame {
