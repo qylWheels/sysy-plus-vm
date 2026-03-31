@@ -230,6 +230,126 @@ TEST_F(SingleInstructionTest, RemInstruction) {
       std::fmod(2.3, 1.1));
 }
 
+TEST_F(SingleInstructionTest, LessInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000002, 0x0b000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{43.9, 62.1, 5.9},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            false);
+}
+
+TEST_F(SingleInstructionTest, LeInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x0c000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{43.9, 43.9, 5.9},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            true);
+}
+
+TEST_F(SingleInstructionTest, EqInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x0d000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{43.9, 43.9, 5.9},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            true);
+}
+
+TEST_F(SingleInstructionTest, GeInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x0e000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{43.9, 43.9, 5.9},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            true);
+}
+
+TEST_F(SingleInstructionTest, GreaterInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x0f000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{43.9000001, 43.9},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            true);
+}
+
+TEST_F(SingleInstructionTest, NotEqInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{1},
+               .instructions{0x02000000, 0x02000001, 0x10000000, 0x03020000}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{43.9, 43.900000001},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_EQ(std::get<BooleanValue>(this->vm.callframes_.top().local_vars[0]),
+            true);
+}
+
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
