@@ -557,11 +557,11 @@ bool Vm::compare(NumberValue a, NumberValue b, CompareMethod m) const {
     case CompareMethod::Less:
       return ((a - b) < -epsilon);
     case CompareMethod::Le:
-      return ((a - b) <= -epsilon);
+      return ((a - b) < -epsilon || std::abs(a - b) < epsilon);
     case CompareMethod::Eq:
       return (std::abs(a - b) < epsilon);
     case CompareMethod::Ge:
-      return ((a - b) >= epsilon);
+      return ((a - b) > epsilon || std::abs(a - b) < epsilon);
     case CompareMethod::Greater:
       return ((a - b) > epsilon);
     case CompareMethod::NotEq:
