@@ -56,6 +56,9 @@ class Vm {
   FRIEND_TEST(SingleInstructionTest, GeInstruction);
   FRIEND_TEST(SingleInstructionTest, GreaterInstruction);
   FRIEND_TEST(SingleInstructionTest, NotEqInstruction);
+  FRIEND_TEST(SingleInstructionTest, LogicalAndInstruction);
+  FRIEND_TEST(SingleInstructionTest, LogicalOrInstruction);
+  FRIEND_TEST(SingleInstructionTest, JumpInstruction);
 };
 
 struct CallFrame {
