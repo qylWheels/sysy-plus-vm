@@ -305,8 +305,7 @@ void Vm::run() {
 
                     // 弹出callee的栈帧，回到caller的栈帧
                     this->callframes_.pop();
-                    valuestack = this->callframes_.top().valuestack;
-                    valuestack.push(retval);
+                    this->callframes_.top().valuestack.push(retval);
                     this->pc_ = parent_pc;
                     return;
                   }
