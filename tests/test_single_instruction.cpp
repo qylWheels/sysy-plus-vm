@@ -534,6 +534,35 @@ TEST_F(SingleInstructionTest, IfNotEqJumpInstruction) {
       1.0000000081);
 }
 
+TEST_F(SingleInstructionTest, CallAndReturnInstruction) {
+  const auto main = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{0},
+                             .instructions{
+                                 0x02000000,
+                                 0x02000001,
+                                 0x1a000001,
+                             }};
+  const auto add =
+      Function{.name{"div"},
+               .param_count{2},
+               .local_var_count{0},
+               .instructions{0x02020000, 0x02020001, 0x09000000, 0x1b000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{46.0, 23.4},
+      .global_table_size{0},
+      .funcs{main, add},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()),
+      46.0 / 23.4);
+}
+
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
