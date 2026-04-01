@@ -410,6 +410,130 @@ TEST_F(SingleInstructionTest, JumpInstruction) {
             true);
 }
 
+TEST_F(SingleInstructionTest, IfLessJumpInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{0},
+                             .instructions{0x02000000, 0x02000001, 0x14000001,
+                                           0x03020000, 0x02000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.0, 2.0},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()), 2.0);
+}
+
+TEST_F(SingleInstructionTest, IfLeJumpInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{0},
+                             .instructions{0x02000000, 0x02000001, 0x15000001,
+                                           0x03020000, 0x02000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.0, 1.0},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()), 1.0);
+}
+
+TEST_F(SingleInstructionTest, IfEqJumpInstruction) {
+  const auto func =
+      Function{.name{"main"},
+               .param_count{0},
+               .local_var_count{0},
+               .instructions{0x02000000, 0x02000001, 0x16000001, 0x02000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.0, 1.000000001},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()),
+      1.000000001);
+}
+
+TEST_F(SingleInstructionTest, IfGeJumpInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{0},
+                             .instructions{0x02000000, 0x02000001, 0x17000001,
+                                           0x03020000, 0x02000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.000000008, 1.000000008},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()),
+      1.000000008);
+}
+
+TEST_F(SingleInstructionTest, IfGreaterJumpInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{0},
+                             .instructions{0x02000000, 0x02000001, 0x18000001,
+                                           0x03020000, 0x02000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.000000008, 1.0000000075},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()),
+      1.0000000075);
+}
+
+TEST_F(SingleInstructionTest, IfNotEqJumpInstruction) {
+  const auto func = Function{.name{"main"},
+                             .param_count{0},
+                             .local_var_count{0},
+                             .instructions{0x02000000, 0x02000001, 0x19000001,
+                                           0x03020000, 0x02000001}};
+  const auto prog = Program{
+      .minor_version{1},
+      .major_version{0},
+      .constants{1.000000008, 1.0000000081},
+      .global_table_size{0},
+      .funcs{func},
+  };
+  ;
+  load_and_run(prog);
+
+  EXPECT_DOUBLE_EQ(
+      std::get<NumberValue>(this->vm.callframes_.top().valuestack.top()),
+      1.0000000081);
+}
+
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
