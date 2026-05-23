@@ -6,7 +6,7 @@
 #include "function.h"
 #include "value.h"
 
-// sysy-plus字节码文件结构：
+// sysy-plus字节码文件结构（均为小端序）：
 // [4字节] magic number: 0x53 0x59 0x73 0x79 ("SYsy")
 // [2字节] 次版本号
 // [2字节] 主版本号
